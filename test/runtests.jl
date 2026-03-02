@@ -1,5 +1,6 @@
 using CoolProp
 using Test
+using Unitful
 
 include("testThrows.jl"); 
 

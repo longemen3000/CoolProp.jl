@@ -85,60 +85,17 @@ function PropsSI(output::AbstractString, name1::AbstractString, value1::Real, na
     return val
 end
 
-# units for humid air
-const _ha_units = Dict(
-    "Tdb" => Unitful.u"K",
-    "Twb" => Unitful.u"K",
-    "Tdp" => Unitful.u"K",
-    "D" => Unitful.u"K",
-    "H" => Unitful.u"J/kg",
-    "Hha" => Unitful.u"J/kg",
-    "U" => Unitful.u"J/kg",
-    "S" => Unitful.u"J/kg/K",
-    "V" => Unitful.u"m^3/kg",
-    "Vda" => Unitful.u"m^3/kg",
-    "Vha" => Unitful.u"m^3/kg",
-    "cp" => Unitful.u"J/kg/K",
-    "CV" => Unitful.u"J/kg/K",
-    "Cha" => Unitful.u"J/kg/K",
-    "CVha" => Unitful.u"J/kg/K",
-    "P_w" => Unitful.u"Pa",
-    )
-
-function _get_unit(param::AbstractString, is_ha::Bool)
-    # First check if it's a humid air parameter
-    if is_ha && haskey(_ha_units, param)
-        return _ha_units[param]
-    end
-    # Otherwise use the normal parameter info
-    unit_str = "-"
-    try
-        unit_str = get_parameter_information_string(param, "units")
-    catch
-    end
-    if unit_str == "-"
-        return Unitful.NoUnits
-    end
-    try
-        # The unit uses e.g. Pa-s to mean Pa*s
-        unit_str = replace(unit_str, "-" => "*")
-        parsed_unit =  Unitful.uparse(unit_str)
-        if parsed_unit isa Unitful.Quantity
-            return Unitful.unit(parsed_unit)
-        end
-        return parsed_unit
-    catch err
-        @warn "Failed to parse unit $(unit_str): " err
-    end
-    return Unitful.NoUnits
+function _get_unit(param::AbstractString, is_ha::Bool, val::Real)
+    return _get_unit(param,is_ha,nothing)
 end
 
-_si_value(unit, value) = Unitful.ustrip(Unitful.uconvert(unit, value))
+_get_unit(param::AbstractString, is_ha::Bool, ::Nothing) = true
+_si_value(::Bool,value) = value
 
-function PropsSI(output::AbstractString, name1::AbstractString, value1::Union{Unitful.Quantity,Real}, name2::AbstractString, value2::Union{Unitful.Quantity,Real}, fluid::AbstractString)
-    unit1 = _get_unit(name1,false)
-    unit2 = _get_unit(name2,false)
-    outunit = _get_unit(output,false)
+function PropsSI(output::AbstractString, name1::AbstractString, value1::Number, name2::AbstractString, value2::Number, fluid::AbstractString)
+    unit1 = _get_unit(name1,false,value1)
+    unit2 = _get_unit(name2,false,value2)
+    outunit = _get_unit(output,false,value1*value2)
     return PropsSI(output, name1, _si_value(unit1,value1), name2, _si_value(unit2,value2), fluid)*outunit
 end
 
@@ -713,11 +670,11 @@ function HAPropsSI(output::AbstractString, name1::AbstractString, value1::Real, 
     return val
 end
 
-function HAPropsSI(output::AbstractString, name1::AbstractString, value1::Union{Unitful.Quantity,Real}, name2::AbstractString, value2::Union{Unitful.Quantity,Real}, name3::AbstractString, value3::Union{Unitful.Quantity,Real})
-    unit1 = _get_unit(name1,true)
-    unit2 = _get_unit(name2,true)
-    unit3 = _get_unit(name3,true)
-    outunit = _get_unit(output,true)
+function HAPropsSI(output::AbstractString, name1::AbstractString, value1::Number, name2::AbstractString, value2::Number, name3::AbstractString, value3::Number)
+    unit1 = _get_unit(name1,true,value1)
+    unit2 = _get_unit(name2,true,value2)
+    unit3 = _get_unit(name3,true,value3)
+    outunit = _get_unit(output,true,value1*value2*value3)
     return HAPropsSI(output, name1, _si_value(unit1,value1), name2, _si_value(unit2,value2), name3, _si_value(unit3,value3))*outunit
 end
 
