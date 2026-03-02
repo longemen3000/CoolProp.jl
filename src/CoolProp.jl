@@ -96,7 +96,7 @@ function PropsSI(output::AbstractString, name1::AbstractString, value1::Number, 
     unit2 = _get_unit(name2,false,value2)
     out = PropsSI(output, name1, _si_value(unit1,value1), name2, _si_value(unit2,value2), fluid)
     unit1 == true && unit2 == true && (return out)
-    out1 != true && (return out*_get_unit(output,false,value1))
+    unit1 != true && (return out*_get_unit(output,false,value1))
     return out*_get_unit(output,false,value2)
 end
 
