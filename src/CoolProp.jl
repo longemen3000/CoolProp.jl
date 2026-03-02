@@ -1453,6 +1453,11 @@ for symorigin = [:PropsSI, :PhaseSI, :K2F, :F2K, :HAPropsSI, :AbstractState_fact
     @eval const $sym = $symorigin
     @eval export $sym, $symorigin
 end
+
+if !isdefined(Base, :get_extension)
+    include("../ext/CoolPropUnitfulExt.jl")
+end
+
 const set_reference_stateS = set_reference_state
 const set_reference_stateD = set_reference_state
 const set_config_string = set_config
