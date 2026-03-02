@@ -94,8 +94,10 @@ _si_value(::Bool,value) = value
 function PropsSI(output::AbstractString, name1::AbstractString, value1::Number, name2::AbstractString, value2::Number, fluid::AbstractString)
     unit1 = _get_unit(name1,false,value1)
     unit2 = _get_unit(name2,false,value2)
-    outunit = _get_unit(output,false,value1*value2)
-    return PropsSI(output, name1, _si_value(unit1,value1), name2, _si_value(unit2,value2), fluid)*outunit
+    out = PropsSI(output, name1, _si_value(unit1,value1), name2, _si_value(unit2,value2), fluid)
+    unit1 == true && unit2 == true && (return out)
+    out1 != true && (return out*_get_unit(output,false,value1))
+    return out*_get_unit(output,falsevalue2)
 end
 
 """
@@ -673,8 +675,11 @@ function HAPropsSI(output::AbstractString, name1::AbstractString, value1::Number
     unit1 = _get_unit(name1,true,value1)
     unit2 = _get_unit(name2,true,value2)
     unit3 = _get_unit(name3,true,value3)
-    outunit = _get_unit(output,true,value1*value2*value3)
-    return HAPropsSI(output, name1, _si_value(unit1,value1), name2, _si_value(unit2,value2), name3, _si_value(unit3,value3))*outunit
+    out = HAPropsSI(output, name1, _si_value(unit1,value1), name2, _si_value(unit2,value2), name3, _si_value(unit3,value3))
+    unit1 == true && unit2 == true && unit3 == true && (return out)
+    unit1 != true && (return out*_get_unit(output,true,value1))
+    unit2 != true && (return out*_get_unit(output,true,value2))
+    return out*_get_unit(output,true,value3)
 end
 
 """
