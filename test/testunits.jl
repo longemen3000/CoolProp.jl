@@ -7,9 +7,9 @@ let fluid="air"
   μ = PropsSI("VISCOSITY", "T", 293K, "P", 101325Pa, fluid)
   @test round(μPa*s, μ; digits=2) == 18.2μPa*s
 
-  # Test that all parameters return a unit
+  # Test that all parameters return a unit when an unitful number is being used
   for param in split(get_global_param_string("parameter_list"),',')
-    @test CoolProp._get_unit(param,false) isa FreeUnits
+    @test CoolProp._get_unit(param,false,1*K) isa FreeUnits
   end
 end
 

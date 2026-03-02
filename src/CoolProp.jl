@@ -465,6 +465,7 @@ ParamName                    | Description
 "Bibtex-XXX"                 | A BibTeX key, where XXX is one of the bibtex keys used in get_BibTeXKey
 "pure"                       | "true" if the fluid is pure, "false" otherwise
 "formula"                    | The chemical formula of the fluid in LaTeX form if available, "" otherwise
+"JSON"                       | The JSON string storing all fluid data
 
 # Note
 A tabular output for this function is available with `?CoolProp_fluids`
