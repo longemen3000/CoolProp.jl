@@ -89,7 +89,7 @@ function _get_unit(param::AbstractString, is_ha::Bool, val::Real)
 end
 
 _get_unit(param::AbstractString, is_ha::Bool, ::Nothing) = nothing
-_si_value(::Bool,value) = value
+_si_value(::Nothing,value) = value
 
 function PropsSI(output::AbstractString, name1::AbstractString, value1::Number, name2::AbstractString, value2::Number, fluid::AbstractString)
     unit1 = _get_unit(name1,false,value1)
