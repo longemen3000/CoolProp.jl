@@ -17,7 +17,8 @@ function compile_from_sourceforge()
     
     # 2. Create build directory
     mkpath(build_dir)
-    
+    mkpath(extract_dir)
+
     # 3. Download the source zip
     @info "Downloading CoolProp source from $download_url..."
     # SourceForge redirects: we need to find the actual download link
