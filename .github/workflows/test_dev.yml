@@ -16,7 +16,7 @@ concurrency:
 
 jobs:
   test-coolprop-dev:
-    timeout-minutes: 40
+    timeout-minutes: 20
     strategy:
       matrix:
         julia_version:
