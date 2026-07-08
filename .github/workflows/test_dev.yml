@@ -1,0 +1,51 @@
+name: Unit Tests
+
+on:
+  - cron: '0 0 * * *'
+  - workflow_dispatch:
+
+concurrency:
+  # Skip intermediate builds: all builds except for builds on the `master` branch
+  # Cancel intermediate builds: only pull request builds
+  group: ${{ github.workflow }}-${{ github.ref }}-${{ github.ref != 'refs/heads/master' || github.run_number }}
+  cancel-in-progress: ${{ startsWith(github.ref, 'refs/pull/') }}
+
+jobs:
+  test-coolprop-dev:
+    timeout-minutes: 40
+    strategy:
+      matrix:
+        os:
+        - "ubuntu-latest"
+        julia_version:
+        - "nightly"
+        - "1"
+        - "1.10"
+      fail-fast: false
+    runs-on: ${{ matrix.os }}
+
+    steps:
+    - name: Checkout
+      uses: actions/checkout@v7
+
+    - uses: julia-actions/setup-julia@v3
+      with:
+        arch: ${{ matrix.julia_arch }}
+        version: ${{ matrix.julia_version }}
+    - uses: julia-actions/cache@v3
+
+    - name: add CoolPropDevLoader
+      shell: julia --color=yes --project=. {0}
+      run: |
+        using Pkg
+        Pkg.develop(path="test/CoolPropDevLoader")
+
+    - name: test dev
+      shell: julia --color=yes --project=test {0}
+      run: |
+        using Pkg
+        Pkg.develop(path="test/CoolPropDevLoader")
+        using CoolPropDevLoader
+        CoolPropDevLoader.use_dev_library(CoolPropDevLoader.CompileCoolPropFromSourceforge())
+
+    - uses: julia-actions/julia-runtest@v1

@@ -1,8 +1,20 @@
 #__precompile__()
 module CoolProp
 
+
+
 import Unitful
-using CoolProp_jll
+import CoolProp_jll
+
+@static if VERSION >= v"1.6"
+    using Preferences
+end
+
+@static if VERSION >= v"1.6"
+    const libcoolprop = @load_preference("coolprop_library", CoolProp_jll.libcoolprop)
+else
+    const libcoolprop = CoolProp_jll.libcoolprop
+end
 
 ####################################################################################################################
 ####################################################################################################################
