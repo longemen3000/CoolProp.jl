@@ -3,13 +3,13 @@ module CoolPropDevLoader
 using Preferences
 using Downloads
 
-const SOURCEFORGE_URL = https://sourceforge.net/projects/coolprop/files/CoolProp/nightly/source/CoolProp_sources.zip
+const SOURCEFORGE_URL = "https://sourceforge.net/projects/coolprop/files/CoolProp/nightly/source/CoolProp_sources.zip/download"
 const COOLPROP_UUID = "e084ae63-2819-5025-826e-f8e611a84251"
 
 #only available in linux
 function compile_from_sourceforge()
     # 1. Configuration
-    download_url = "https://sourceforge.net/projects/coolprop/files/CoolProp/nightly/source/CoolProp_sources.zip/download"
+    download_url = SOURCEFORGE_URL
     build_dir = joinpath(@__DIR__, "coolprop_build")  # Change as needed
     source_zip = joinpath(build_dir, "CoolProp_sources.zip")
     extract_dir = joinpath(build_dir, "CoolProp")
