@@ -2,7 +2,7 @@ name: Unit Tests
 
 on:
   - cron: '0 0 * * *'
-  - workflow_dispatch:
+  - workflow_dispatch
 
 concurrency:
   # Skip intermediate builds: all builds except for builds on the `master` branch
