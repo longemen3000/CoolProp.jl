@@ -19,12 +19,12 @@ jobs:
     timeout-minutes: 40
     strategy:
       matrix:
-        version:
+        julia_version:
           - 'lts'
           - '1'
         os:
           - ubuntu-latest
-        arch:
+        julia_arch:
           - x64
       fail-fast: false
     runs-on: ${{ matrix.os }}
