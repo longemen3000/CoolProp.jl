@@ -5,7 +5,6 @@ using Downloads
 using CoolProp_jll
 
 const SOURCEFORGE_URL = "https://sourceforge.net/projects/coolprop/files/CoolProp/nightly/source/CoolProp_sources.zip/download"
-const COOLPROP_UUID = "e084ae63-2819-5025-826e-f8e611a84251"
 
 #only available in linux
 function compile_from_sourceforge()
@@ -22,8 +21,7 @@ function compile_from_sourceforge()
 
     # 3. Download the source zip
     @info "Downloading CoolProp source from $url..."
-    download_url = "https://sourceforge.net/projects/coolprop/files/CoolProp/nightly/source/CoolProp_sources.zip/download"
-    Downloads.download(download_url, source_zip)
+    Downloads.download(SOURCEFORGE_URL, source_zip)
     
     # 4. Extract the zip into build_dir
     @info "Extracting source..."
