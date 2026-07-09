@@ -1,6 +1,8 @@
 #__precompile__()
 module CoolProp
 
+@info "CoolProp library path: $(CoolProp.libcoolprop)"
+
 errcode = Ref{Clong}(0)
 const buffer_length = 20000
 message_buffer = Array(UInt8, buffer_length)
