@@ -9,10 +9,10 @@ const COOLPROP_UUID = "e084ae63-2819-5025-826e-f8e611a84251"
 #only available in linux
 function compile_from_sourceforge()
     # 1. Configuration
-    download_url = SOURCEFORGE_URL
+    url = SOURCEFORGE_URL
     build_dir = joinpath(@__DIR__, "coolprop_build")  # Change as needed
     source_zip = joinpath(build_dir, "CoolProp_sources.zip")
-    extract_dir = joinpath(build_dir, "CoolProp")
+    extract_dir = build_dir  # We'll extract directly into build_dir, then locate source root
     lib_name = "libCoolProp.so"
     
     # 2. Create build directory
@@ -20,39 +20,59 @@ function compile_from_sourceforge()
     mkpath(extract_dir)
 
     # 3. Download the source zip
-    @info "Downloading CoolProp source from $download_url..."
-    # SourceForge redirects: we need to find the actual download link
-    # The nightly source is typically at:
-    # https://sourceforge.net/projects/coolprop/files/CoolProp/nightly/source/CoolProp_sources.zip/download
-    
+    @info "Downloading CoolProp source from $url..."
+    download_url = "https://sourceforge.net/projects/coolprop/files/CoolProp/nightly/source/CoolProp_sources.zip/download"
     Downloads.download(download_url, source_zip)
     
-    # 4. Extract the zip
+    # 4. Extract the zip into build_dir
     @info "Extracting source..."
     run(`unzip -q $source_zip -d $build_dir`)
     
-    # 5. Prepare for CMake build
-    cd(extract_dir) do
-        # Create build directory inside extracted source
-        build_subdir = joinpath(extract_dir, "build")
-        mkpath(build_subdir)
-        cd(build_subdir) do
-            # 6. Configure with CMake - build shared library
-            @info "Configuring with CMake..."
-            run(`cmake .. -DCOOLPROP_SHARED_LIBRARY=ON -DCMAKE_BUILD_TYPE=Release`)
-            
-            # 7. Build
-            @info "Compiling CoolProp (this may take a few minutes)..."
-            run(`cmake --build . --config Release --parallel $(Sys.CPU_THREADS)`)
+    # 5. Find the actual source root: a directory that contains CMakeLists.txt
+    @info "Locating source root..."
+    function find_cmakelists_root(dir)
+        # Check if dir itself contains CMakeLists.txt
+        if isfile(joinpath(dir, "CMakeLists.txt"))
+            return dir
         end
+        # Otherwise, look for a subdirectory that contains it
+        for entry in readdir(dir)
+            path = joinpath(dir, entry)
+            if isdir(path) && isfile(joinpath(path, "CMakeLists.txt"))
+                return path
+            end
+        end
+        # If not found, search recursively (but be careful with deep structures)
+        for (root, dirs, files) in walkdir(dir)
+            if "CMakeLists.txt" in files
+                return root
+            end
+        end
+        error("Could not find CMakeLists.txt anywhere in $dir")
     end
     
-    # 8. Locate the generated shared library
-    # The library is typically in build/ or build/Release/
+    source_root = find_cmakelists_root(extract_dir)
+    @info "Source root found at: $source_root"
+    
+    # 6. Prepare for CMake build: create a build subdirectory inside source_root
+    build_subdir = joinpath(source_root, "build")
+    mkpath(build_subdir)
+    cd(build_subdir) do
+        # 7. Configure with CMake - build shared library
+        @info "Configuring with CMake..."
+        run(`cmake .. -DCOOLPROP_SHARED_LIBRARY=ON -DCMAKE_BUILD_TYPE=Release`)
+        
+        # 8. Build
+        @info "Compiling CoolProp (this may take a few minutes)..."
+        run(`cmake --build . --config Release --parallel $(Sys.CPU_THREADS)`)
+    end
+    
+    # 9. Locate the generated shared library
+    # The library is typically in build/ or build/Release/ or build/lib/
     possible_paths = [
-        joinpath(extract_dir, "build", lib_name),
-        joinpath(extract_dir, "build", "Release", lib_name),
-        joinpath(extract_dir, "build", "lib", lib_name),
+        joinpath(source_root, "build", lib_name),
+        joinpath(source_root, "build", "Release", lib_name),
+        joinpath(source_root, "build", "lib", lib_name),
     ]
     
     lib_path = nothing
@@ -70,6 +90,10 @@ function compile_from_sourceforge()
     @info "CoolProp library built successfully at: $lib_path"
     return lib_path
 end
+
+# Usage
+lib_path = build_coolprop()
+@info "Library path: $lib_path"
 
 struct CompileCoolPropFromSourceforge end
 
