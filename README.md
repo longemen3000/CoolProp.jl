@@ -39,3 +39,12 @@ using Unitful: °C, Pa
 HAPropsSI("H", "Tdb", 20°C, "RH", 0.5, "P", 101325Pa)
 38622.83892391293 J kg⁻¹
 ```
+
+## Using development versions of CoolProp
+
+You can point CoolProp.jl to use tyour own version of CoolProp by using `Preferences.jl`:
+
+```julia
+using CoolProp, Preferences
+@set_reference!(CoolProp,"coolprop_library" = my_path_to_library)
+```

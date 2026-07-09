@@ -100,12 +100,12 @@ function use_dev_library(::CompileCoolPropFromSourceforge)
 end
 
 function use_dev_library(lib_src::String)
-    set_preferences!(COOLPROP_UUID,"coolprop_library" => lib_src, force = true)
+    set_preferences!((COOLPROP_UUID,"CoolProp"),"coolprop_library" => lib_src, force = true,active_project_only = false)
     @info "Preference set to $lib_src"
 end
 
 function use_default_library()
-    delete_preferences!(COOLPROP_UUID,"coolprop_library",force = true)
+    delete_preferences!((COOLPROP_UUID,"CoolProp"),"coolprop_library",force = true,active_project_only = false)
 end
 
 end #module
