@@ -45,7 +45,7 @@ jobs:
         using Pkg
         Pkg.develop(path="test/CoolPropDevLoader")
 
-    - name: test dev
+    - name: Compiling CoolProp
       shell: julia --color=yes --compiled-modules=no --project=test {0}
       run: |
         using Pkg
