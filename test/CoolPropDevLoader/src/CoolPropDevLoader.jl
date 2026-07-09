@@ -25,7 +25,7 @@ function compile_from_sourceforge()
     
     # 4. Extract the zip into build_dir
     @info "Extracting source..."
-    run(`unzip -q $source_zip -d $build_dir`)
+    run(`unzip -qo $source_zip -d $build_dir`)
     
     # 5. Find the actual source root: a directory that contains CMakeLists.txt
     @info "Locating source root..."
@@ -99,7 +99,7 @@ function use_dev_library(::CompileCoolPropFromSourceforge)
 end
 
 function use_dev_library(lib_src::String)
-    set_preferences!(CoolProp_jll,"coolprop_library" => lib_src, force = true,active_project_only = false,export_prefs = true)
+    set_preferences!(CoolProp_jll,"coolprop_library" => lib_src, force = true)
     @info "Preference set to $lib_src"
 end
 
