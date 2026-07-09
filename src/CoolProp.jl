@@ -11,7 +11,7 @@ import CoolProp_jll
 end
 
 @static if VERSION >= v"1.6"
-    const libcoolprop = @load_preference("coolprop_library", CoolProp_jll.libcoolprop)
+    const libcoolprop = load_preference(CoolProp_jll,"coolprop_library", CoolProp_jll.libcoolprop)
 else
     const libcoolprop = CoolProp_jll.libcoolprop
 end

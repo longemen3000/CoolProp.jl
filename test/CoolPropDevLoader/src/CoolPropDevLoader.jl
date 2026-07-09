@@ -2,6 +2,7 @@ module CoolPropDevLoader
 
 using Preferences
 using Downloads
+using CoolProp_jll
 
 const SOURCEFORGE_URL = "https://sourceforge.net/projects/coolprop/files/CoolProp/nightly/source/CoolProp_sources.zip/download"
 const COOLPROP_UUID = "e084ae63-2819-5025-826e-f8e611a84251"
@@ -95,17 +96,17 @@ struct CompileCoolPropFromSourceforge end
 
 function use_dev_library(::CompileCoolPropFromSourceforge)
     lib_src = compile_from_sourceforge()
-    set_preferences!(COOLPROP_UUID,"coolprop_library" => lib_src, force = true)
+    set_preferences!(CoolProp_jll,"coolprop_library" => lib_src, force = true)
     @info "Preference set to $lib_src"
 end
 
 function use_dev_library(lib_src::String)
-    set_preferences!((COOLPROP_UUID,"CoolProp"),"coolprop_library" => lib_src, force = true,active_project_only = false,export_prefs = true)
+    set_preferences!(CoolProp_jll,"coolprop_library" => lib_src, force = true,active_project_only = false,export_prefs = true)
     @info "Preference set to $lib_src"
 end
 
 function use_default_library()
-    delete_preferences!((COOLPROP_UUID,"CoolProp"),"coolprop_library",force = true,active_project_only = false,export_prefs = true)
+    delete_preferences!(CoolProp_jll,"coolprop_library",force = true,export_prefs = true)
 end
 
 end #module
