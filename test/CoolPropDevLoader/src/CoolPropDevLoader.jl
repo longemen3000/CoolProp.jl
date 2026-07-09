@@ -91,10 +91,6 @@ function compile_from_sourceforge()
     return lib_path
 end
 
-# Usage
-lib_path = build_coolprop()
-@info "Library path: $lib_path"
-
 struct CompileCoolPropFromSourceforge end
 
 function use_dev_library(::CompileCoolPropFromSourceforge)
