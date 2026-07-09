@@ -51,6 +51,7 @@ jobs:
       run: |
         using Pkg
         Pkg.develop(path="test/CoolPropDevLoader")
+        Pkg.develop()
         using CoolPropDevLoader
         CoolPropDevLoader.use_dev_library(CoolPropDevLoader.CompileCoolPropFromSourceforge())
 
