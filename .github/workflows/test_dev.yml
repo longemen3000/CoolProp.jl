@@ -7,7 +7,7 @@ on:
   push:
     paths:
       - '.github/**'
-      - 'test/CoolPropDevLoader/**'
+      - 'test/**'
 
 permissions:
   contents: read
