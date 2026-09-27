@@ -126,7 +126,7 @@ try
 catch err
     @warn "AbstractState_set_cubic_alpha_C fails with: $err"
 end
-AbstractState_set_fluid_parameter_double(handle, 0, "c", 1.0)
+AbstractState_set_fluid_parameter_double(handle, 0, "c", 1e-8)
 AbstractState_free(handle)
 if (haskey(ENV, "includelocalwrapper") && ENV["includelocalwrapper"]=="on")
     handle = AbstractState_factory("HEOS", "Water")
