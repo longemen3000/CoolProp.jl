@@ -4,7 +4,7 @@ const parameterswithnumval = union(trivalwithnumval, Set(["P_TRIPLE","pcrit","p_
 "P_min","pmax","T_min","T_reducing","T_MAX","P_MIN","T_triple","P_MAX","ptriple","Ttriple",
 "acentric","p_critical","Tmax","T_TRIPLE","rhomolar_reducing","MOLAR_MASS",
 "P_CRITICAL","T_max","molemass","T_MIN","rhomass_critical","T_critical",
-"P_max","RHOMASS_CRITICAL","molar_mass","pmin"]));
+"P_max","RHOMASS_CRITICAL","molar_mass","pmin","HFORMATION"]));
 global counter = 0;
 global longunits = Set();
 for p in coolpropparameters
