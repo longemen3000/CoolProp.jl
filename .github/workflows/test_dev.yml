@@ -8,6 +8,7 @@ on:
     paths:
       - '.github/**'
       - 'test/**'
+      - 'Project.toml'
 
 permissions:
   contents: read
